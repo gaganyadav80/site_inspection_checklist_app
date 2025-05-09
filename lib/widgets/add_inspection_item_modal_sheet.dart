@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:site_inspection_checklist_app/core/constants.dart';
 import 'package:site_inspection_checklist_app/core/extensions.dart';
 import 'package:site_inspection_checklist_app/mock_data.dart';
-import 'package:site_inspection_checklist_app/model/category.dart';
+import 'package:site_inspection_checklist_app/model/item_category.dart';
 import 'package:site_inspection_checklist_app/widgets/primary_button.dart';
 
 class AddInspectionItemModalSheet extends StatefulWidget {

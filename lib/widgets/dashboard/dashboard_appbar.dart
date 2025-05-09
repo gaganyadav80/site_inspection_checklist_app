@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:site_inspection_checklist_app/widgets/dashboard_task_summary_tile.dart';
+import 'package:site_inspection_checklist_app/widgets/dashboard/dashboard_task_summary_tile.dart';
 import 'package:site_inspection_checklist_app/widgets/secondary_button.dart';
 
 class DashboardAppBar extends StatelessWidget implements PreferredSizeWidget {

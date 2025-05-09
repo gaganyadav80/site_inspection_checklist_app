@@ -6,10 +6,12 @@ class SecondaryButton extends StatelessWidget {
     super.key,
     required this.child,
     required this.onPressed,
+    this.borderSide = BorderSide.none,
   });
 
   final Widget child;
   final VoidCallback onPressed;
+  final BorderSide borderSide;
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,7 @@ class SecondaryButton extends StatelessWidget {
         backgroundColor: WidgetStateProperty.all(Colors.grey.shade100),
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
+            side: borderSide,
             borderRadius: kDefaultBorderRadius,
           ),
         ),
