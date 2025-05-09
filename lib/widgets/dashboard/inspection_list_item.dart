@@ -48,6 +48,7 @@ class InspectionListItem extends StatelessWidget {
             boxShadow: kLightBoxShadow,
           ),
           child: Row(
+            spacing: 16,
             children: [
               Expanded(
                 child: Column(
