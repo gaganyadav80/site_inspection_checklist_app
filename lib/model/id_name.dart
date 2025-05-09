@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
-class ItemStatus extends Equatable {
-  const ItemStatus({
+class IdName extends Equatable {
+  const IdName({
     required this.id,
     required this.name,
   });
@@ -9,7 +9,7 @@ class ItemStatus extends Equatable {
   final int id;
   final String name;
 
-  factory ItemStatus.fromJson(Map<String, dynamic> json) => ItemStatus(
+  factory IdName.fromJson(Map<String, dynamic> json) => IdName(
         id: json['id'],
         name: json['name'],
       );

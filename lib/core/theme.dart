@@ -4,7 +4,7 @@ import 'package:site_inspection_checklist_app/core/constants.dart';
 abstract class AppTheme {
   static ThemeData get lightTheme => ThemeData(
         useMaterial3: true,
-        colorSchemeSeed: kPrimaryColor,
+        primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: kScaffoldBackgroundColor,
         appBarTheme: AppBarTheme(
           backgroundColor: Colors.white,

@@ -17,7 +17,7 @@ class _AddInspectionItemModalSheetState
     extends State<AddInspectionItemModalSheet> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
-  ItemCategory? selectedCategory;
+  IdName? selectedCategory;
 
   @override
   void dispose() {
@@ -116,7 +116,7 @@ class _AddInspectionItemModalSheetState
                 ),
                 SizedBox(height: 8),
                 DropdownButtonHideUnderline(
-                  child: DropdownButtonFormField<ItemCategory>(
+                  child: DropdownButtonFormField<IdName>(
                     decoration: decoration.copyWith(
                       hintText: 'Select category',
                       focusedBorder: inputBorder,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:site_inspection_checklist_app/core/ui_helper.dart';
-import 'package:site_inspection_checklist_app/model/item_status.dart';
+import 'package:site_inspection_checklist_app/model/id_name.dart';
 
 class InspectionItemStatusIcon extends StatelessWidget {
   const InspectionItemStatusIcon({
@@ -8,12 +8,12 @@ class InspectionItemStatusIcon extends StatelessWidget {
     required this.status,
   });
 
-  final ItemStatus status;
+  final IdName status;
 
   @override
   Widget build(BuildContext context) {
-    final color = UiHelper.getStatusColor(status);
-    final icon = UiHelper.getStatusIcon(status);
+    final color = UiHelper.getStatusColor(status.id);
+    final icon = UiHelper.getStatusIcon(status.id);
 
     return Container(
       width: 20,
