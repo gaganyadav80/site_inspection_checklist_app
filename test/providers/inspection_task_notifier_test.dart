@@ -6,12 +6,8 @@ import 'package:site_inspection_checklist_app/database/local_database.dart';
 import 'package:site_inspection_checklist_app/model/id_name.dart';
 import 'package:site_inspection_checklist_app/model/inspection_task.dart';
 import 'package:site_inspection_checklist_app/providers/inspection_task_notifier.dart';
-import 'package:sqflite/sqflite.dart';
 
-// Define mock classes
-class MockLocalDatabase extends Mock implements LocalDatabase {}
-
-class MockDatabase extends Mock implements Database {}
+import '../mocks.dart';
 
 void main() {
   group('InspectionTaskNotifier', () {

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:site_inspection_checklist_app/database/local_database.dart';
 import 'package:site_inspection_checklist_app/providers/inspection_task_notifier.dart';
 import 'package:site_inspection_checklist_app/widgets/add_inspection_item_modal_sheet.dart';
 import 'package:site_inspection_checklist_app/widgets/dashboard/dashboard_appbar.dart';
@@ -18,7 +17,6 @@ class _DashboardViewState extends ConsumerState<DashboardView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await ref.read(databaseProvider).init();
       ref.read(inspectionTaskNotifier.notifier).fetchAllTasks();
     });
   }
