@@ -3,6 +3,7 @@ import 'package:site_inspection_checklist_app/core/constants.dart';
 import 'package:site_inspection_checklist_app/core/extensions.dart';
 import 'package:site_inspection_checklist_app/core/ui_helper.dart';
 import 'package:site_inspection_checklist_app/mock_data.dart';
+import 'package:site_inspection_checklist_app/widgets/add_inspection_item_modal_sheet.dart';
 import 'package:site_inspection_checklist_app/widgets/dashboard_appbar.dart';
 import 'package:site_inspection_checklist_app/widgets/inspection_item_status_icon.dart';
 
@@ -71,7 +72,15 @@ class DashboardView extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return AddInspectionItemModalSheet();
+            },
+          );
+        },
         child: Icon(Icons.add),
       ),
     );
