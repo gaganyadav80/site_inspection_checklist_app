@@ -20,20 +20,30 @@ class DashboardTaskSummaryTile extends ConsumerWidget {
     int notApplicableTasksCount = 0;
     int pendingTasksCount = 0;
 
-    if (allTasksState.valueOrNull != null) {
-      for (final task in allTasksState.valueOrNull!) {
-        final status = TaskStatus.fromId(task.status.id);
-        switch (status) {
-          case TaskStatus.passed:
-            completedTasksCount++;
-          case TaskStatus.failed:
-            failedTasksCount++;
-          case TaskStatus.notApplicable:
-            notApplicableTasksCount++;
-          case TaskStatus.pending:
-            pendingTasksCount++;
-        }
+    final allTasksList = allTasksState.valueOrNull ?? [];
+    for (final task in allTasksList) {
+      final status = TaskStatus.fromId(task.status.id);
+      switch (status) {
+        case TaskStatus.passed:
+          completedTasksCount++;
+        case TaskStatus.failed:
+          failedTasksCount++;
+        case TaskStatus.notApplicable:
+          notApplicableTasksCount++;
+        case TaskStatus.pending:
+          pendingTasksCount++;
       }
+    }
+
+    final String displayText;
+    if (allTasksList.isEmpty) {
+      displayText = 'Hello there! Start your first task';
+    } else if (completedTasksCount > 0) {
+      displayText = '$completedTasksCount/12 Complete';
+    } else if (pendingTasksCount > 0) {
+      displayText = 'You have $pendingTasksCount pending tasks';
+    } else {
+      displayText = 'Complete your first task today!';
     }
 
     return Container(
@@ -53,9 +63,7 @@ class DashboardTaskSummaryTile extends ConsumerWidget {
         children: [
           Expanded(
             child: Text(
-              completedTasksCount == 0
-                  ? 'You have $pendingTasksCount pending tasks'
-                  : '$completedTasksCount/12 Complete',
+              displayText,
               style: TextTheme.of(context).bodySmall,
             ),
           ),
