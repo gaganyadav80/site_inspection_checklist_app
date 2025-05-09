@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:site_inspection_checklist_app/core/constants.dart';
+import 'package:site_inspection_checklist_app/core/enums.dart';
 import 'package:site_inspection_checklist_app/core/extensions.dart';
 import 'package:site_inspection_checklist_app/core/ui_helper.dart';
 import 'package:site_inspection_checklist_app/model/inspection_task.dart';
@@ -16,7 +17,11 @@ class InspectionListItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundColor = UiHelper.getStatusColor(item.status);
+    final statusColor = UiHelper.getStatusColor(item.status.id);
+
+    final backgroundColor = item.status.id == TaskStatus.pending.id
+        ? statusColor?.shade200.withValues(alpha: 0.8)
+        : statusColor?.shade50.withValues(alpha: 0.8);
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
@@ -35,11 +40,10 @@ class InspectionListItem extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color:
-                backgroundColor?.shade50.withValues(alpha: 0.8) ?? Colors.white,
+            color: backgroundColor ?? Colors.white,
             borderRadius: kDefaultBorderRadius,
             border: Border.all(
-              color: backgroundColor?.shade200 ?? Colors.grey.shade200,
+              color: statusColor?.shade200 ?? Colors.grey.shade200,
             ),
             boxShadow: kLightBoxShadow,
           ),

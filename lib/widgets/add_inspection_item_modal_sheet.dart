@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:site_inspection_checklist_app/core/constants.dart';
+import 'package:site_inspection_checklist_app/core/enums.dart';
 import 'package:site_inspection_checklist_app/core/extensions.dart';
-import 'package:site_inspection_checklist_app/mock_data.dart';
-import 'package:site_inspection_checklist_app/model/item_category.dart';
+import 'package:site_inspection_checklist_app/model/id_name.dart';
+import 'package:site_inspection_checklist_app/model/inspection_task.dart';
+import 'package:site_inspection_checklist_app/providers/generic_providers.dart';
+import 'package:site_inspection_checklist_app/providers/inspection_task_notifier.dart';
 import 'package:site_inspection_checklist_app/widgets/primary_button.dart';
 
-class AddInspectionItemModalSheet extends StatefulWidget {
+class AddInspectionItemModalSheet extends ConsumerStatefulWidget {
   const AddInspectionItemModalSheet({super.key});
 
   @override
-  State<AddInspectionItemModalSheet> createState() =>
+  ConsumerState<AddInspectionItemModalSheet> createState() =>
       _AddInspectionItemModalSheetState();
 }
 
 class _AddInspectionItemModalSheetState
-    extends State<AddInspectionItemModalSheet> {
+    extends ConsumerState<AddInspectionItemModalSheet> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   IdName? selectedCategory;
@@ -28,10 +32,10 @@ class _AddInspectionItemModalSheetState
   @override
   Widget build(BuildContext context) {
     final labelStyle = context.textTheme.bodyMedium?.copyWith(
-      color: Colors.grey.shade800,
+      color: Colors.grey.shade600,
     );
     final hintStyle = context.textTheme.bodyMedium?.copyWith(
-      color: Colors.grey.shade600,
+      color: Colors.grey.shade400,
     );
 
     final inputBorder = OutlineInputBorder(
@@ -49,6 +53,25 @@ class _AddInspectionItemModalSheetState
         borderSide: BorderSide(
           color: kPrimaryColor,
         ),
+      ),
+    );
+
+    ref.listen(
+      inspectionTaskNotifier.select(
+        (value) => value.addTaskState,
+      ),
+      (previous, next) {
+        if (next is AsyncData) {
+          Navigator.of(context).pop();
+        }
+      },
+    );
+
+    final categories = ref.watch(categoriesProvider).valueOrNull ?? [];
+
+    final addTaskState = ref.watch(
+      inspectionTaskNotifier.select(
+        (value) => value.addTaskState,
       ),
     );
 
@@ -95,13 +118,16 @@ class _AddInspectionItemModalSheetState
                 SizedBox(height: 8),
                 TextFormField(
                   controller: nameController,
-                  onTapOutside: (event) {
-                    FocusScope.of(context).unfocus();
-                  },
+                  textCapitalization: TextCapitalization.sentences,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  minLines: 1,
+                  maxLines: null,
                   decoration: decoration.copyWith(
                     hintText: 'i.e. Electrical Wiring',
                   ),
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  onTapOutside: (event) {
+                    FocusScope.of(context).unfocus();
+                  },
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Item name is required';
@@ -120,12 +146,15 @@ class _AddInspectionItemModalSheetState
                     decoration: decoration.copyWith(
                       hintText: 'Select category',
                       focusedBorder: inputBorder,
+                      focusedErrorBorder: inputBorder,
                     ),
                     borderRadius: kDefaultBorderRadius,
                     dropdownColor: Colors.white,
                     style: hintStyle,
-                    onChanged: (value) {},
-                    items: mockCategories.map((category) {
+                    onChanged: (value) {
+                      selectedCategory = value;
+                    },
+                    items: categories.map((category) {
                       return DropdownMenuItem(
                         value: category,
                         child: Text(
@@ -134,6 +163,7 @@ class _AddInspectionItemModalSheetState
                         ),
                       );
                     }).toList(),
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     validator: (value) {
                       if (value == null) {
                         return 'Category is required';
@@ -147,13 +177,35 @@ class _AddInspectionItemModalSheetState
           ),
           SizedBox(height: 24),
           PrimaryButton(
-            onPressed: () {
-              if (formKey.currentState?.validate() ?? false) {}
-            },
+            onPressed: addTaskState.isLoading
+                ? null
+                : () {
+                    if (formKey.currentState?.validate() ?? false) {
+                      final item = InspectionTask(
+                        id: 0, // this will be ignored.
+                        name: nameController.text.trim(),
+                        category: selectedCategory!,
+                        status: TaskStatus.pending.idName,
+                        createdAt: DateTime.now(),
+                        modifiedAt: DateTime.now(),
+                      );
+
+                      ref.read(inspectionTaskNotifier.notifier).addTask(item);
+                    }
+                  },
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Add Item'),
+                if (addTaskState.isLoading)
+                  SizedBox.square(
+                    dimension: 20,
+                    child: const CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                else
+                  Text('Add Item'),
               ],
             ),
           ),

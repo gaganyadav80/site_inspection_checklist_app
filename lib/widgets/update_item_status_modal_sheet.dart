@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:site_inspection_checklist_app/core/constants.dart';
+import 'package:site_inspection_checklist_app/core/enums.dart';
 import 'package:site_inspection_checklist_app/core/extensions.dart';
 import 'package:site_inspection_checklist_app/core/ui_helper.dart';
-import 'package:site_inspection_checklist_app/mock_data.dart';
 import 'package:site_inspection_checklist_app/model/inspection_task.dart';
+import 'package:site_inspection_checklist_app/providers/generic_providers.dart';
+import 'package:site_inspection_checklist_app/providers/inspection_task_notifier.dart';
 import 'package:site_inspection_checklist_app/widgets/secondary_button.dart';
 
-class UpdateItemStatusModalSheet extends StatelessWidget {
+class UpdateItemStatusModalSheet extends ConsumerWidget {
   const UpdateItemStatusModalSheet({
     super.key,
     required this.item,
@@ -15,7 +18,14 @@ class UpdateItemStatusModalSheet extends StatelessWidget {
   final InspectionTask item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final statusOptionsList =
+        ref.watch(statusProvider).valueOrNull?.toList() ?? [];
+
+    statusOptionsList.removeWhere(
+      (element) => element.id == TaskStatus.pending.id,
+    );
+
     return SingleChildScrollView(
       padding: EdgeInsets.all(16).copyWith(
         bottom: context.bottomSafePadding,
@@ -61,16 +71,22 @@ class UpdateItemStatusModalSheet extends StatelessWidget {
           ),
           SizedBox(height: 16),
           ...List.generate(
-            mockItemStatuses.length,
+            statusOptionsList.length,
             (index) {
-              final status = mockItemStatuses[index];
-              final statusColor = UiHelper.getStatusColor(status);
-              final statusIcon = UiHelper.getStatusIcon(status);
+              final status = statusOptionsList[index];
+              final statusColor = UiHelper.getStatusColor(status.id);
+              final statusIcon = UiHelper.getStatusIcon(status.id);
 
               return Padding(
                 padding: EdgeInsets.only(bottom: 8),
                 child: FilledButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    ref.read(inspectionTaskNotifier.notifier).updateTaskStatus(
+                          item.id,
+                          status,
+                        );
+                    Navigator.pop(context);
+                  },
                   style: ButtonStyle(
                     backgroundColor: WidgetStateProperty.all(
                       statusColor?.shade50.withValues(alpha: 0.8) ??

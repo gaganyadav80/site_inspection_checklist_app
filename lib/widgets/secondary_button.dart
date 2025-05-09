@@ -10,7 +10,7 @@ class SecondaryButton extends StatelessWidget {
   });
 
   final Widget child;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final BorderSide borderSide;
 
   @override

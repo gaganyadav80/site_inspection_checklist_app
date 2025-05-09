@@ -1,28 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:site_inspection_checklist_app/core/constants.dart';
-import 'package:site_inspection_checklist_app/model/item_status.dart';
+import 'package:site_inspection_checklist_app/core/enums.dart';
 
 class UiHelper {
-  static MaterialColor? getStatusColor(ItemStatus status) {
-    switch (status.id) {
-      case 1:
+  static MaterialColor? getStatusColor(int statusId) {
+    final status = TaskStatus.fromId(statusId);
+    switch (status) {
+      case TaskStatus.passed:
         return kPassedItemColor;
-      case 2:
+      case TaskStatus.failed:
         return kFailedItemColor;
-      case 3:
+      case TaskStatus.notApplicable:
         return kNotApplicableItemColor;
       default:
         return null;
     }
   }
 
-  static Widget getStatusIcon(ItemStatus status) {
-    switch (status.id) {
-      case 1:
+  static Widget getStatusIcon(int statusId) {
+    final status = TaskStatus.fromId(statusId);
+    switch (status) {
+      case TaskStatus.passed:
         return Icon(Icons.check);
-      case 2:
+      case TaskStatus.failed:
         return Icon(Icons.close);
-      case 3:
+      case TaskStatus.notApplicable:
         return Icon(Icons.block);
       default:
         return SizedBox();
